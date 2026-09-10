@@ -1,0 +1,4 @@
+.vscode/
+/build
+cloc-2.02.exe
+valgrind.log
