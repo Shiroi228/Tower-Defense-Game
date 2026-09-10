@@ -1,0 +1,10 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/">
+        <file>sounds/background.mp3</file>
+        <file>sounds/bullet.mp3</file>
+        <file>sounds/VikiShow.mp3</file>
+
+        <file>images/tower.png</file>
+    </qresource>
+</RCC>
