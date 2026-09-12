@@ -5,6 +5,7 @@
 #include <QImage>
 #include <QTimer>
 
+#include "bullet.hpp"
 #include "game.hpp"
 #include "tower.hpp"
 
@@ -17,6 +18,13 @@ QSharedPointer<GameView> GameView::instance() {
 
     game_ = QSharedPointer<GameView>(new GameView);
     return game_;
+}
+
+void GameView::mousePressEvent(QMouseEvent *event) {
+    BulletElement *bullet = new BulletElement();
+    bullet->setPos(event->pos());
+
+    scene_->addItem(bullet);
 }
 
 void GameView::handleMediaError(QMediaPlayer::Error error) {
