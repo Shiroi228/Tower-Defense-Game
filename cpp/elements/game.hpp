@@ -1,8 +1,10 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QMediaPlayer>
+#include <QMouseEvent>
 #include <QSharedPointer>
 
 namespace elements {
@@ -13,6 +15,8 @@ public:
     ~GameView();
 
     static QSharedPointer<GameView> instance();
+
+    void mousePressEvent(QMouseEvent *event) override;
 
 private slots:
     void handleMediaError(QMediaPlayer::Error error);
