@@ -1,6 +1,5 @@
-// #include <QPointF>
-// #include <QPolygonF>
 #include <QTimer>
+#include <QTransform>
 
 #include <qmath.h>
 
@@ -8,9 +7,13 @@
 
 namespace elements {
 
-BulletElement::BulletElement(QGraphicsItem *parent) : DefaultElement(parent) {
+BulletElement::BulletElement(QGraphicsItem *parent) : QObject(), DefaultElement(parent) {
+    QTransform transform;
+    transform.rotate(90);
+
     QPixmap pixmap(":/images/arrow.png");
     pixmap = pixmap.scaled(17, 75);
+    pixmap = pixmap.transformed(transform);
 
     setPixmap(pixmap);
 

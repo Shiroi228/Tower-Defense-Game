@@ -10,6 +10,7 @@
 namespace elements {
 
 class GameView : public QGraphicsView {
+    Q_OBJECT
 public:
     GameView(QWidget *parent = nullptr);
     ~GameView();
