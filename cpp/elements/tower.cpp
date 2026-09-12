@@ -1,12 +1,15 @@
 #include <QPointF>
 #include <QPolygonF>
 #include <QVector>
+#include <QTimer>
 
 #include "tower.hpp"
+#include "bullet.hpp"
+#include "game.hpp"
 
 namespace elements {
 
-TowerElement::TowerElement(QGraphicsItem *parent) : DefaultElement(parent) {
+TowerElement::TowerElement(QGraphicsItem *parent) : QObject(), DefaultElement(parent) {
     QPixmap pixmap(":/images/tower.png");
     pixmap = pixmap.scaled(100, 100);
 
@@ -33,6 +36,24 @@ TowerElement::TowerElement(QGraphicsItem *parent) : DefaultElement(parent) {
     
     attackArea_ = new QGraphicsPolygonItem(polygon, this);
     attackArea_->setPos(x() + line.dx(), y() + line.dy());
+
+    QTimer *timer = new QTimer(this);
+    
+    connect(timer, &QTimer::timeout, this, attackTarget);
+    
+    timer->start(1000);
+}
+
+void TowerElement::attackTarget() {
+    QLineF line(QPointF(x() + 44, y() + 44), attackDest_);
+    qreal angle = line.angle() * -1;
+    
+    BulletElement *bullet = new BulletElement();
+    bullet->setPos(x() + 44, y() + 44);
+    bullet->setRotation(angle);
+
+    GameView::instance()->scene()->addItem(bullet);
+    
 }
 
 }
