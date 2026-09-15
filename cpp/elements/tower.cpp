@@ -6,10 +6,11 @@
 #include "tower.hpp"
 #include "bullet.hpp"
 #include "game.hpp"
+#include "enemy.hpp"
 
 namespace elements {
 
-TowerElement::TowerElement(QGraphicsItem *parent) : QObject(), DefaultElement(parent) {
+TowerElement::TowerElement(QGraphicsItem *parent) : QObject(), DefaultElement(parent), hasTarget_(false) {
     QPixmap pixmap(":/images/tower.png");
     pixmap = pixmap.scaled(100, 100);
 
@@ -39,12 +40,43 @@ TowerElement::TowerElement(QGraphicsItem *parent) : QObject(), DefaultElement(pa
 
     QTimer *timer = new QTimer(this);
     
-    connect(timer, &QTimer::timeout, this, attackTarget);
+    connect(timer, &QTimer::timeout, this, &TowerElement::aquireTarget);
     
     timer->start(1000);
 }
 
-void TowerElement::attackTarget() {
+void TowerElement::aquireTarget() {
+    QList<QGraphicsItem *> collidingItemList = attackArea_->collidingItems();
+
+    if (collidingItemList.size() == 1) {
+        hasTarget_ = false;
+
+        return;
+    }
+
+    double closestDist = 300;
+    QPointF closestPoint = QPointF(0, 0);
+    for (size_t i = 0, n = collidingItemList.size(); i < n; i++) {
+        EnemyElement *enemy = dynamic_cast<EnemyElement *>(collidingItemList[i]);
+        if (!enemy) { continue; }
+
+        double thisDist = distanceTo(enemy);
+        if (thisDist < closestDist) {
+            closestDist = thisDist;
+            closestPoint = collidingItemList[i]->pos();
+            hasTarget_ = true;
+        }
+    }
+
+    attackDest_ = closestPoint;
+    fire();
+}
+
+double TowerElement::distanceTo(QGraphicsItem *target) {
+    return QLineF(pos(), target->pos()).length();
+}
+
+void TowerElement::fire() {
     QLineF line(QPointF(x() + 44, y() + 44), attackDest_);
     qreal angle = line.angle() * -1;
     
@@ -53,7 +85,6 @@ void TowerElement::attackTarget() {
     bullet->setRotation(angle);
 
     GameView::instance()->scene()->addItem(bullet);
-    
 }
 
 }
