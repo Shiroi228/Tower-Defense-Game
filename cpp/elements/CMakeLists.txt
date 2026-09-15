@@ -19,10 +19,12 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(PROJECT_SOURCES
     bullet.hpp
     elements.hpp
+    enemy.hpp
     game.hpp
     tower.hpp
 
     bullet.cpp
+    enemy.cpp
     game.cpp
     tower.cpp
 )

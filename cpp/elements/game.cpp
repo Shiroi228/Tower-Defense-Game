@@ -8,6 +8,7 @@
 #include "bullet.hpp"
 #include "game.hpp"
 #include "tower.hpp"
+#include "enemy.hpp"
 
 namespace elements {
 
@@ -68,6 +69,9 @@ GameView::GameView(QWidget *parent) : QGraphicsView(parent), scene_(new QGraphic
     scene_->setSceneRect(0, 0, 800, 600);
 
     tower->setPos(width() / 2 - tower->boundingRect().width() / 2, height() / 2 - tower->boundingRect().height() / 2);
+
+    EnemyElement *enemy = new EnemyElement();
+    scene_->addItem(enemy);
 
     // QTimer *timer = new QTimer();
     // connect(timer, &QTimer::timeout, player_, &PlayerElement::spawn);
