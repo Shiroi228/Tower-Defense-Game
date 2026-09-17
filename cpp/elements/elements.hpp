@@ -6,6 +6,7 @@
 
 namespace elements {
 
+    
 /*
  * DefaultElement
  *
@@ -18,9 +19,21 @@ public:
 
 
 /*
+ * DefaultToolbarButton
+ *
+ ***/
+    
+class DefaultToolbarButton : public QGraphicsPixmapItem {
+public:
+    DefaultToolbarButton(QGraphicsItem *parent = nullptr) : QGraphicsPixmapItem(parent) {};
+};
+
+
+/*
  * TextElement
  *
  ***/
+
 class TextElement : public QGraphicsTextItem {
 public:
     TextElement(QGraphicsItem *parent = nullptr) : QGraphicsTextItem(parent) {};

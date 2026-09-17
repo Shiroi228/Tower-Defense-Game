@@ -6,6 +6,7 @@
         <file>sounds/VikiShow.mp3</file>
 
         <file>images/arrow.png</file>
+        <file>images/build.png</file>
         <file>images/enemy.png</file>
         <file>images/tower.png</file>
     </qresource>

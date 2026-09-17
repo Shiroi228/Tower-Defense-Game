@@ -37,6 +37,7 @@ TowerElement::TowerElement(QGraphicsItem *parent) : QObject(), DefaultElement(pa
     
     attackArea_ = new QGraphicsPolygonItem(polygon, this);
     attackArea_->setPos(x() + line.dx(), y() + line.dy());
+    attackArea_->setPen(QPen(Qt::DotLine));
 
     QTimer *timer = new QTimer(this);
     

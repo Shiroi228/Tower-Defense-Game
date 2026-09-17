@@ -7,7 +7,6 @@
 
 #include "bullet.hpp"
 #include "game.hpp"
-#include "tower.hpp"
 #include "enemy.hpp"
 
 namespace elements {
@@ -21,54 +20,20 @@ QSharedPointer<GameView> GameView::instance() {
     return game_;
 }
 
-void GameView::mousePressEvent(QMouseEvent *event) {
-    BulletElement *bullet = new BulletElement();
-    bullet->setPos(event->pos());
-
-    scene_->addItem(bullet);
-}
-
-void GameView::handleMediaError(QMediaPlayer::Error error) {
-    qDebug() << "Media Error:" << error << mediaPlayer_->errorString();
-        
-    if (error == QMediaPlayer::FormatError) {
-        loadAudioAlternative();
-    }
-}
-
-void GameView::loadAudioWithoutReplayGain() {
-    QUrl url = QUrl("qrc:/sounds/VikiShow.mp3");
-    url.setQuery("ffmpeg=replaygain=0");
-    
-    mediaPlayer_->setSource(url);
-    mediaPlayer_->play();
-}
-
-void GameView::loadAudioAlternative() {
-    QAudioDecoder *decoder = new QAudioDecoder(this);
-    decoder->setSource(QUrl("qrc:/sounds/VikiShow.mp3"));
-    
-    connect(decoder, &QAudioDecoder::bufferReady, [this, decoder]() {
-        QAudioBuffer buffer = decoder->read();
-    });
-    
-    decoder->start();
-}
-
-GameView::GameView(QWidget *parent) : QGraphicsView(parent), scene_(new QGraphicsScene(this)), mediaPlayer_(new QMediaPlayer(this)),
-    audioOutput_(new QAudioOutput(this)) {
+GameView::GameView(QWidget *parent) : QGraphicsView(parent), scene_(new QGraphicsScene(this)), tower_(new TowerElement()),  mediaPlayer_(new QMediaPlayer(this)),
+    audioOutput_(new QAudioOutput(this)), cursor_(nullptr), buildButton_(new BuildButton()) {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setFixedSize(800, 600);
     setScene(scene_);
+    setMouseTracking(true);
     // setBackgroundBrush(QBrush(QImage(":/images/background.jpg")));
     
-    TowerElement *tower = new TowerElement();
-    
-    scene_->addItem(tower);
+    scene_->addItem(buildButton_);
+    scene_->addItem(tower_);
     scene_->setSceneRect(0, 0, 800, 600);
 
-    tower->setPos(width() / 2 - tower->boundingRect().width() / 2, height() / 2 - tower->boundingRect().height() / 2);
+    tower_->setPos(width() / 2 - tower_->boundingRect().width() / 2, height() / 2 - tower_->boundingRect().height() / 2);
 
     EnemyElement *enemy = new EnemyElement();
     scene_->addItem(enemy);
@@ -106,6 +71,78 @@ GameView::~GameView() {
     delete audioOutput_;
 
     QCoreApplication::processEvents();
+}
+
+
+void GameView::mousePressEvent(QMouseEvent *event) {
+    if (tower_) {
+        scene_->addItem(tower_);
+        tower_->setPos(event->pos());
+        cursor_ = nullptr;
+        tower_ = nullptr;
+    } else {
+        QGraphicsView::mousePressEvent(event);
+    }
+}
+
+void GameView::mouseMoveEvent(QMouseEvent *event) {
+    if (cursor_) {
+        cursor_->setPos(event->pos());
+    }
+}
+
+TowerElement *GameView::tower() const {
+    return tower_;
+}
+
+void GameView::setTower(TowerElement *tower) {
+    tower_ = tower;
+}
+
+void GameView::handleMediaError(QMediaPlayer::Error error) {
+    qDebug() << "Media Error:" << error << mediaPlayer_->errorString();
+        
+    if (error == QMediaPlayer::FormatError) {
+        loadAudioAlternative();
+    }
+}
+
+void GameView::loadAudioWithoutReplayGain() {
+    QUrl url = QUrl("qrc:/sounds/VikiShow.mp3");
+    url.setQuery("ffmpeg=replaygain=0");
+    
+    mediaPlayer_->setSource(url);
+    mediaPlayer_->play();
+}
+
+void GameView::loadAudioAlternative() {
+    QAudioDecoder *decoder = new QAudioDecoder(this);
+    decoder->setSource(QUrl("qrc:/sounds/VikiShow.mp3"));
+    
+    connect(decoder, &QAudioDecoder::bufferReady, [this, decoder]() {
+        QAudioBuffer buffer = decoder->read();
+    });
+    
+    decoder->start();
+}
+
+void GameView::setCursor(const QString &filename) {
+    if (cursor_) {
+        scene_->removeItem(cursor_);
+        delete cursor_;
+    }
+
+    QPixmap pixmap(filename);
+    pixmap.scaled(10, 10);
+    
+    cursor_ = new QGraphicsPixmapItem();
+    cursor_->setPixmap(pixmap);
+
+    scene_->addItem(cursor_);
+}
+
+void GameView::addItem(QGraphicsItem *item) {
+    scene_->addItem(item);
 }
 
 }
