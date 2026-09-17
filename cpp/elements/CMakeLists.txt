@@ -21,11 +21,13 @@ set(PROJECT_SOURCES
     elements.hpp
     enemy.hpp
     game.hpp
+    toolbar.hpp
     tower.hpp
 
     bullet.cpp
     enemy.cpp
     game.cpp
+    toolbar.cpp
     tower.cpp
 )
 
