@@ -29,15 +29,6 @@
 
 3. После сборки запустите игру через сгенерированный исполняемый файл, например: `Release/TowerDefense.exe`.
 
-## Структура проекта
-
-- `cpp/main.cpp` — точка входа в приложение.
-- `cpp/elements/game.cpp/.hpp` — игровое поле и логика.
-- `cpp/elements/tower.cpp/.hpp` — классы башни.
-- `cpp/elements/enemy.cpp/.hpp` — классы врагов.
-- `cpp/elements/bullet.cpp/.hpp` — классы пуль.
-- `cpp/elements/toolbar.cpp/.hpp` — панель управления.
-
 ## Зависимости
 
 Для работы проекта требуются:
